@@ -9,9 +9,8 @@ import com.example.hellodjinni.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'hellodjinni' library on application startup.
     static {
-        System.loadLibrary("hellodjinni");
+        System.loadLibrary("native-lib");
     }
 
     private ActivityMainBinding binding;
@@ -23,14 +22,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Example of a call to a native method
         TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
-    }
 
-    /**
-     * A native method that is implemented by the 'hellodjinni' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
+        HelloDjinni hello_djinni =HelloDjinni.create();
+        hello_djinni.fromLanguage(" << From Java !!>");
+        tv.setText(hello_djinni.fromCpp());
+    }
 }

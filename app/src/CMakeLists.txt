@@ -12,8 +12,17 @@ set(DJINNI_WITH_JNI ON CACHE INTERNAL "Djinni with JNI")
 
 add_subdirectory(djinni-support-lib)
 
-add_library(hellodjinni SHARED main/cpp/native-lib.cpp)
+set(HEADER_FILES generated/cpp generated/jni main/cpp)
 
+file(GLOB_RECURSE SOURCE_FILES
+        generated/cpp/*.cpp
+        generated/jni/*.cpp
+        main/cpp/*.cpp
+)
+
+set(ALL_FILES ${HEADER_FILES} ${SOURCE_FILES})
+
+add_library(native-lib SHARED ${ALL_FILES})
 find_library(log-lib log)
-
-target_link_libraries(hellodjinni ${log-lib})
+target_link_libraries(native-lib PUBLIC djinni-support-lib::djinni-support-lib)
+target_include_directories(native-lib PUBLIC ${ALL_FILES} ${log-lib})
